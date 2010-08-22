@@ -1,6 +1,8 @@
 package com.binarycloud.drums
 
-import Math.{signum, sqrt}
+import Math.signum
+
+
 
 class Correlator(N:Int) {
   // keep the last 100 values in a ring buffer
@@ -28,7 +30,7 @@ class Correlator(N:Int) {
   }
 
   def avg(l:Array[Double]):Double = l.foldRight(0.0)(_+_)/l.length
-  def stddev(l:Array[Double]):Double = sqrt(l.foldLeft(0.0)((a, b) => a + (b - avg(l))*(b - avg(l))))
+  def stddev(l:Array[Double]):Double = l.foldLeft(0.0)((a, b) => a + (b - avg(l))*(b - avg(l)))
 
   def pearson(template:Array[Double]):Double = {
     val hist_slice = new Array[Double](template.length)
@@ -37,7 +39,7 @@ class Correlator(N:Int) {
       hist_slice(j) = history(hj)
     }
     val all = template.zip(hist_slice)
-//    println("a1 %s, a2 %s  %s".format(avg(template), avg(hist_slice), hist_slice.length))
-    return all.foldLeft(0.0)((a, b) => a + (b._1 - avg(template)) * (b._2 - avg(hist_slice)) ) / stddev(hist_slice) / stddev(template)
+//    println("a1 %s, a2 %s (f %s __ %s".format(avg(template), avg(hist_slice), s, e, hist_slice.length))
+    return all.foldLeft(0.0)((a, b) => a + (b._1 - avg(template)) * (b._2 - avg(hist_slice)) )
   }
 }
